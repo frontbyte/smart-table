@@ -1,17 +1,20 @@
-import './fonts/ys-display/fonts.css'
-import './style.css'
+import "./fonts/ys-display/fonts.css";
+import "./style.css";
 
-import {data as sourceData} from "./data/dataset_1.js";
+import { data as sourceData } from "./data/dataset_1.js";
 
-import {initData} from "./data.js";
-import {processFormData} from "./lib/utils.js";
+import { initData } from "./data.js";
+import { processFormData } from "./lib/utils.js";
 
-import {initTable} from "./components/table.js";
 // @todo: подключение
+import { initTable } from "./components/table.js";
 
+import { initPagination } from "./components/pagination.js";
+import { initSorting } from "./components/sorting.js";
+import { initFiltering } from "./components/filtering.js";
 
 // Исходные данные используемые в render()
-const {data, ...indexes} = initData(sourceData);
+const { data, ...indexes } = initData(sourceData);
 
 /**
  * Сбор и обработка полей из таблицы
@@ -19,9 +22,15 @@ const {data, ...indexes} = initData(sourceData);
  */
 function collectState() {
     const state = processFormData(new FormData(sampleTable.container));
+    // приведём количество страниц к числу
+    const rowsPerPage = parseInt(state.rowsPerPage);
+    // номер страницы по умолчанию 1 и тоже число
+    const page = parseInt(state.page ?? 1);
 
     return {
-        ...state
+        ...state,
+        rowsPerPage,
+        page,
     };
 }
 
@@ -33,22 +42,49 @@ function render(action) {
     let state = collectState(); // состояние полей из таблицы
     let result = [...data]; // копируем для последующего изменения
     // @todo: использование
+    result = applyFiltering(result, state, action);
+    result = applySorting(result, state, action);
+    result = applyPagination(result, state, action);
 
-
-    sampleTable.render(result)
+    sampleTable.render(result);
 }
 
-const sampleTable = initTable({
-    tableTemplate: 'table',
-    rowTemplate: 'row',
-    before: [],
-    after: []
-}, render);
+const sampleTable = initTable(
+    {
+        tableTemplate: "table",
+        rowTemplate: "row",
+        before: ["search", "header", "filter"],
+        after: ["pagination"],
+    },
+    render,
+);
 
 // @todo: инициализация
+const applyPagination = initPagination(
+    sampleTable.pagination.elements, // передаём сюда элементы пагинации, найденные в шаблоне
+    (el, page, isCurrent) => {
+        // и колбэк, чтобы заполнять кнопки страниц данными
+        const input = el.querySelector("input");
+        const label = el.querySelector("span");
+        input.value = page;
+        input.checked = isCurrent;
+        label.textContent = page;
+        return el;
+    },
+);
+// Нам нужно передать сюда массив элементов, которые вызывают сортировку, чтобы изменять их визуальное представление
+const applySorting = initSorting([
+    sampleTable.header.elements.sortByDate,
+    sampleTable.header.elements.sortByTotal,
+]);
 
+// передаём элементы фильтра
+const applyFiltering = initFiltering(sampleTable.filter.elements, {
+    // для элемента с именем searchBySeller устанавливаем массив продавцов
+    searchBySeller: indexes.sellers
+});
 
-const appRoot = document.querySelector('#app');
+const appRoot = document.querySelector("#app");
 appRoot.appendChild(sampleTable.container);
 
 render();
