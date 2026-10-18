@@ -29,7 +29,9 @@ export function initTable(settings, onAction) {
     });
 
     // @todo: #1.3 —  обработать события и вызвать onAction()
-    root.container.addEventListener("change", () => onAction());
+    root.container.addEventListener("change", () => {
+        onAction();
+    });
     root.container.addEventListener("reset", () => setTimeout(onAction, 0));
     root.container.addEventListener("submit", (e) => {
         e.preventDefault();

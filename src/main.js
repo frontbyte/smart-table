@@ -79,7 +79,6 @@ const applySorting = initSorting([
     sampleTable.header.elements.sortByDate,
     sampleTable.header.elements.sortByTotal,
 ]);
-
 // передаём элементы фильтра
 const applyFiltering = initFiltering(sampleTable.filter.elements, {
     // для элемента с именем searchBySeller устанавливаем массив продавцов
