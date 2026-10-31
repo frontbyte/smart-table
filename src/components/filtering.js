@@ -1,10 +1,11 @@
 import { createComparison, defaultRules } from "../lib/compare.js";
 
-// @todo: #4.3 — настроить компаратор
+// Настройка компаратора
 const compare = createComparison(defaultRules);
 
 export function initFiltering(elements, indexes) {
-    // @todo: #4.1 — заполнить выпадающие списки опциями
+    // Заолняем выпадающие списки опциями
+
     // Получаем ключи из объекта
     Object.keys(indexes)
         // Перебираем по именам
@@ -15,7 +16,7 @@ export function initFiltering(elements, indexes) {
                 ...Object.values(indexes[elementName])
                     // используйте name как значение и текстовое содержимое
                     .map((name) => {
-                        // @todo: создать и вернуть тег опции <option value="name">name</option>
+                        // Создаем и возвращаем тег опции <option value="name">name</option>
                         const optionElement = document.createElement("option");
                         optionElement.value = name;
                         optionElement.textContent = name;
@@ -24,7 +25,8 @@ export function initFiltering(elements, indexes) {
             );
         });
     return (data, state, action) => {
-        // @todo: #4.2 — обработать очистку поля
+        // обрабатываем очистку поля
+
         // проверяем наличие действия и имя кнопки 'clear'
         if (action && action.name === "clear") {
             //находим input рядом с нашей кнопкой через родительский элемент кнопки
@@ -36,7 +38,7 @@ export function initFiltering(elements, indexes) {
             const searchField = action.dataset.field;
             state[searchField] = "";
         }
-        // 
+
         const totalFrom = parseFloat(state.totalFrom) || undefined;
         const totalTo = parseFloat(state.totalTo) || undefined;
 
@@ -46,7 +48,7 @@ export function initFiltering(elements, indexes) {
 
         delete state.totalFrom;
         delete state.totalTo;
-        // @todo: #4.5 — отфильтровать данные используя компаратор
+        // отфильтровываем данные используя компаратор
         return data.filter((row) => compare(row, state));
     };
 }
