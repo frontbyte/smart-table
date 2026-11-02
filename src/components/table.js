@@ -11,8 +11,7 @@ export function initTable(settings, onAction) {
     const { tableTemplate, rowTemplate, before, after } = settings;
     const root = cloneTemplate(tableTemplate);
 
-    // выведем дополнительные шаблоны до и после таблицы
-
+    // @todo: #1.2 —  вывести дополнительные шаблоны до и после таблицы
     // перебираем массив идентификаторов шаблонов before
     before.reverse().forEach((templateId) => {
         // клонируем и получаем объект, сохраняем в таблице
@@ -29,7 +28,7 @@ export function initTable(settings, onAction) {
         root.container.append(root[templateId].container);
     });
 
-    // обработаем события и вызвать onAction()
+    // @todo: #1.3 —  обработать события и вызвать onAction()
     root.container.addEventListener("change", () => {
         onAction();
     });
@@ -40,7 +39,7 @@ export function initTable(settings, onAction) {
     });
 
     const render = (data) => {
-        // преобразуем данные в массив строк на основе шаблона rowTemplate
+        // @todo: #1.1 — преобразовать данные в массив строк на основе шаблона rowTemplate
         const nextRows = data.map((item) => {
             const row = cloneTemplate(rowTemplate);
             Object.keys(item).forEach((key) => {
