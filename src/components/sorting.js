@@ -6,14 +6,16 @@ export function initSorting(columns) {
         let order = null;
 
         if (action && action.name === "sort") {
-            // @todo: #3.1 — запомнить выбранный режим сортировки
+            // запомним выбранный режим сортировки
+
             // Сохраним и применим как текущее следующее состояние из карты
             action.dataset.value = sortMap[action.dataset.value];
             // Информация о сортируемом поле есть также в кнопке
             field = action.dataset.field;
             // Направление заберём прямо из датасета для точности
             order = action.dataset.value;
-            // @todo: #3.2 — сбросить сортировки остальных колонок
+            // сбросим сортировку остальных колонок
+
             // Перебираем элементы (в columns у нас массив кнопок)
             columns.forEach((column) => {
                 // Если это не та кнопка, что нажал пользователь
@@ -23,7 +25,8 @@ export function initSorting(columns) {
                 }
             });
         } else {
-            // @todo: #3.3 — получить выбранный режим сортировки
+            // получим выбранный режим сортировки
+            
             // Перебираем все наши кнопки сортировки
             columns.forEach((column) => {
                 // Ищем ту, что находится не в начальном состоянии (предполагаем, что одна)
@@ -37,7 +40,7 @@ export function initSorting(columns) {
         }
 
         // сохраним в переменную параметр сортировки в виде field:direction
-        const sort = (field && order !== 'none') ? `${field}:${order}` : null;
+        const sort = field && order !== "none" ? `${field}:${order}` : null;
 
         // по общему принципу, если есть сортировка, добавляем, если нет, то не трогаем query
         return sort ? Object.assign({}, query, { sort }) : query;

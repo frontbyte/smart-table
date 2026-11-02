@@ -1,8 +1,8 @@
 export function initFiltering(elements) {
-    // @todo: #4.1 — заполнить выпадающие списки опциями
-    // Получаем ключи из объекта
+    // заполняем выпадающие списки опциями
 
     const updateIndexes = (elements, indexes) => {
+        // Получаем ключи из объекта
         Object.keys(indexes)
             // Перебираем по именам
             .forEach((elementName) => {
@@ -12,7 +12,7 @@ export function initFiltering(elements) {
                     ...Object.values(indexes[elementName])
                         // используем name как значение и текстовое содержимое
                         .map((name) => {
-                            // @todo: создать и вернуть тег опции <option value="name">name</option>
+                            // создадим и вернем тег опции <option value="name">name</option>
                             const optionElement =
                                 document.createElement("option");
                             optionElement.value = name;
@@ -24,7 +24,8 @@ export function initFiltering(elements) {
     };
 
     const applyFiltering = (query, state, action) => {
-         // @todo: #4.2 — обработать очистку поля
+        // обработаем очистку поля
+
         // проверяем наличие действия и имя кнопки 'clear'
         if (action && action.name === "clear") {
             //находим input рядом с нашей кнопкой через родительский элемент кнопки
@@ -36,7 +37,7 @@ export function initFiltering(elements) {
             const searchField = action.dataset.field;
             state[searchField] = "";
         }
-        // @todo: #4.5 — отфильтровать данные, используя компаратор
+        // отфильтруем данные, используя компаратор
         const filter = {};
         Object.keys(elements).forEach((key) => {
             if (elements[key]) {
@@ -60,32 +61,4 @@ export function initFiltering(elements) {
         updateIndexes,
         applyFiltering,
     };
-
-    /* -------------------------------------------------------------------- */
-    /* return (data, state, action) => {
-        // @todo: #4.2 — обработать очистку поля
-        // проверяем наличие действия и имя кнопки 'clear'
-        if (action && action.name === "clear") {
-            //находим input рядом с нашей кнопкой через родительский элемент кнопки
-            const clearButtonContainer = action.parentElement;
-            const input = clearButtonContainer.querySelector("input");
-            // Для найденного поля ввода сбрасываем value
-            input.value = "";
-            //для соответствующего поля в state также сбрасываем значение
-            const searchField = action.dataset.field;
-            state[searchField] = "";
-        }
-        //
-        const totalFrom = parseFloat(state.totalFrom) || undefined;
-        const totalTo = parseFloat(state.totalTo) || undefined;
-
-        if (totalFrom !== undefined || totalTo !== undefined) {
-            state.total = [totalFrom, totalTo];
-        }
-
-        delete state.totalFrom;
-        delete state.totalTo;
-        // @todo: #4.5 — отфильтровать данные используя компаратор
-        return data.filter((row) => compare(row, state));
-    }; */
 }

@@ -8,7 +8,6 @@ import { processFormData } from "./lib/utils.js";
 
 // @todo: подключение
 import { initTable } from "./components/table.js";
-
 import { initPagination } from "./components/pagination.js";
 import { initSorting } from "./components/sorting.js";
 import { initFiltering } from "./components/filtering.js";
@@ -41,23 +40,20 @@ function collectState() {
  */
 async function render(action) {
     let state = collectState(); // состояние полей из таблицы
-    // let result = [...data]; // копируем для последующего изменения
     // здесь будут формироваться параметры запроса
     let query = {};
     // @todo: использование
-    // result = applySearching(result, state, action);
     query = applySearching(query, state, action);
-    // result = applyFiltering(result, state, action);
     query = applyFiltering(query, state, action);
-    // result = applySorting(result, state, action);
     query = applySorting(query, state, action);
-    // result = applyPagination(result, state, action);
-    query = applyPagination(query, state, action); // обновляем query
+    query = applyPagination(query, state, action);
 
     // запрашиваем данные с собранными параметрами
     const { total, items } = await api.getRecords(query);
 
-    updatePagination(total, query); // перерисовываем пагинатор
+    // перерисовываем пагинатор
+    updatePagination(total, query);
+
     sampleTable.render(items);
 }
 
@@ -72,7 +68,6 @@ const sampleTable = initTable(
 );
 
 // @todo: инициализация
-// const applyPagination = initPagination(
 const { applyPagination, updatePagination } = initPagination(
     sampleTable.pagination.elements, // передаём сюда элементы пагинации, найденные в шаблоне
     (el, page, isCurrent) => {
@@ -90,12 +85,8 @@ const applySorting = initSorting([
     sampleTable.header.elements.sortByDate,
     sampleTable.header.elements.sortByTotal,
 ]);
+
 // передаём элементы фильтра
-// const applyFiltering = initFiltering(sampleTable.filter.elements, {
-//     // для элемента с именем searchBySeller устанавливаем массив продавцов
-//     searchBySeller: indexes.sellers,
-// });
-// fixit: возможно нужно удалить из аргументов searchBySeller: indexes.sellers,
 const { applyFiltering, updateIndexes } = initFiltering(
     sampleTable.filter.elements,
 );
